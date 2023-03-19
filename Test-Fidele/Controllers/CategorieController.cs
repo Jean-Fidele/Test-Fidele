@@ -7,7 +7,7 @@ using Test_Fidele.Models.Categories;
 
 namespace Test_Fidele.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CategorieController : ControllerBase
