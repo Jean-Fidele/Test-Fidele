@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Test_Fidele.Services;
 
 namespace Test_Fidele.Controllers
 {
@@ -15,11 +16,13 @@ namespace Test_Fidele.Controllers
     {
         public IConfiguration _configuration;
         private readonly DataContext _context;
+        private readonly IMetier _metier;
 
-        public TokenController(IConfiguration config, DataContext context)
+        public TokenController(IConfiguration config, DataContext context, IMetier metier)
         {
             _configuration = config;
             _context = context;
+            _metier= metier;
         }
 
         [HttpPost]
@@ -66,6 +69,12 @@ namespace Test_Fidele.Controllers
         private async Task<UserInfo> GetUser(string email, string password)
         {
             return await _context.Set<UserInfo>().FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
+        }
+
+        [HttpGet]
+        public Categorie get()
+        {
+            return _metier.charger();
         }
     }
 }

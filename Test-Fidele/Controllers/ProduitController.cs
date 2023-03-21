@@ -12,10 +12,12 @@ namespace Test_Fidele.Controllers
     public class ProduitController : ControllerBase
     {
         public DataContext dataContext;
+        private readonly ILogger _logger;
 
-        public ProduitController(DataContext dataContext)
+        public ProduitController(DataContext dataContext, ILoggerFactory logFactory)
         {
             this.dataContext = dataContext;
+            _logger = logFactory.CreateLogger<ProduitController>();
         }
 
         /*
@@ -27,6 +29,7 @@ namespace Test_Fidele.Controllers
                                                 [FromQuery] int page = 1, 
                                                 [FromQuery] int size = 5)
         {
+            _logger.LogInformation("C est reussi --------------------------------");
             //Check users data
             try
             {
