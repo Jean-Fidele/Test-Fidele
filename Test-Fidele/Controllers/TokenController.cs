@@ -65,7 +65,6 @@ namespace Test_Fidele.Controllers
             }
         }
 
-
         [HttpPost("info")]
         public IActionResult Post([FromBody] InfoToken token)
         {
