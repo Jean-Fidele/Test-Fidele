@@ -1,5 +1,8 @@
 using Data.Context;
+using Domain.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+//using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -16,9 +19,21 @@ builder.Services.AddDbContext<DataContext>(options =>
            .LogTo(Console.WriteLine, LogLevel.Information)
 );
 
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(connectionString, x => x.MigrationsAssembly("Data"))
+           .LogTo(Console.WriteLine, LogLevel.Information));
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddCors();
 
 builder.Services.AddControllersWithViews()
+    //.AddFluentValidation(fvc =>
+    //{
+    //    fvc.RegisterValidatorsFromAssemblyContaining<ValidateController>();
+    //    fvc.RegisterValidatorsFromAssemblyContaining<GetLanguages>();
+    //    fvc.RegisterValidatorsFromAssemblyContaining<GetProfile>();
+    //})
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;

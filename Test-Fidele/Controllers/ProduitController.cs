@@ -9,7 +9,7 @@ namespace Test_Fidele.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProduitController : ControllerBase
+    public class ProduitController : BaseApiController
     {
         public DataContext dataContext;
         private readonly ILogger<ProduitController> _logger;
@@ -29,7 +29,8 @@ namespace Test_Fidele.Controllers
                                                 [FromQuery] int page = 1, 
                                                 [FromQuery] int size = 5)
         {
-            //Check users data
+            _logger.LogInformation($"\n --------- Matricule : {this.Matricule} , Username :  {this.Username} \n");
+            
             try
             {
                 var totale = await this.dataContext.Set<Produit>().CountAsync();
