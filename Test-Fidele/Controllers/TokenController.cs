@@ -6,8 +6,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Test_Fidele.Services;
-using static OpenIddict.Validation.OpenIddictValidationHandlers;
 
 namespace Test_Fidele.Controllers
 {
@@ -106,4 +104,3 @@ namespace Test_Fidele.Controllers
         public string value { get; set; }
     }
 }
-
