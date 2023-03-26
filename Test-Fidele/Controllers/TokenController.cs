@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Test_Fidele.Services;
+using static OpenIddict.Validation.OpenIddictValidationHandlers;
 
 namespace Test_Fidele.Controllers
 {
@@ -16,13 +17,11 @@ namespace Test_Fidele.Controllers
     {
         public IConfiguration _configuration;
         private readonly DataContext _context;
-        private readonly IMetier _metier;
 
-        public TokenController(IConfiguration config, DataContext context, IMetier metier)
+        public TokenController(IConfiguration config, DataContext context)
         {
             _configuration = config;
             _context = context;
-            _metier= metier;
         }
 
         [HttpPost]
@@ -66,16 +65,46 @@ namespace Test_Fidele.Controllers
             }
         }
 
+
+        [HttpPost("info")]
+        public IActionResult Post([FromBody] InfoToken token)
+        {
+            var claims = GetInfoToken(token.value);
+            return Ok(claims);
+        }
+
+        private IEnumerable<Claim> GetInfoToken(string token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidAudience = _configuration["Jwt:Audience"],
+                ValidIssuer = _configuration["Jwt:Issuer"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"])),
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+            //principal
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+
+            var email = jwtSecurityToken?.Claims.First(x => x.Type == "Email").Value;
+
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid token");
+            return jwtSecurityToken.Claims;
+        }
+
         private async Task<UserInfo> GetUser(string email, string password)
         {
             return await _context.Set<UserInfo>().FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
         }
+    }
 
-        [HttpGet]
-        public Categorie get()
-        {
-            return _metier.charger();
-        }
+    public class InfoToken
+    {
+        public string value { get; set; }
     }
 }
 

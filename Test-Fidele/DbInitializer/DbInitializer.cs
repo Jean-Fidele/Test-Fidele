@@ -37,8 +37,7 @@ namespace Test_Fidele.DbInitializer
             if (_db.Roles.Any(x => x.Name == Helper.Admin)) return;
 
             _roleManager.CreateAsync(new IdentityRole(Helper.Admin)).GetAwaiter().GetResult();
-            _roleManager.CreateAsync(new IdentityRole(Helper.Doctor)).GetAwaiter().GetResult();
-            _roleManager.CreateAsync(new IdentityRole(Helper.Patient)).GetAwaiter().GetResult();
+            _roleManager.CreateAsync(new IdentityRole(Helper.Anonymous)).GetAwaiter().GetResult();
 
             _userManager.CreateAsync(new ApplicationUser
             {
@@ -48,8 +47,8 @@ namespace Test_Fidele.DbInitializer
                 Firstname = "Admin Spark"
             }, "Admin123*").GetAwaiter().GetResult();
 
-           // ApplicationUser user = _db.Users.FirstOrDefault(u => u.Email == "admin@gmail.com");
-           // _userManager.AddToRoleAsync(user, Helper.Admin).GetAwaiter().GetResult();
+            ApplicationUser user = _db.Users.FirstOrDefault(u => u.Email == "admin@gmail.com");
+            _userManager.AddToRoleAsync(user, Helper.Admin).GetAwaiter().GetResult();
         }
     }
 }

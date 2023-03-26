@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Test_Fidele.Models.Users;
 using Test_Fidele.Utility;
+using Test_Fidele.DbInitializer;
 
 namespace Test_Fidele.Controllers
 {
@@ -19,7 +20,7 @@ namespace Test_Fidele.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginVM model)
+        public async Task<IActionResult> Login(RoleVM model)
         {
             if (ModelState.IsValid)
             {

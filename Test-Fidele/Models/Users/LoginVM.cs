@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Test_Fidele.Models.Users
 {
-    public class LoginVM
+    public class RoleVM
     {
         [Required]
         [EmailAddress]

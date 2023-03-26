@@ -8,6 +8,8 @@ using Test_Fidele.Utility;
 
 namespace Test_Fidele.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class UserController : BaseApiController
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -26,10 +28,10 @@ namespace Test_Fidele.Controllers
             return Ok(userList);
         }
 
-        [HttpGet]
+        [HttpGet("{email}")]
         public async Task<IActionResult> GetByEmail(string email)
         {
-            var user = await _userManager.FindByNameAsync(email);
+            var user = await _userManager.FindByEmailAsync(email);
             if(user == null)
             {
                 return NotFound(user.Email);
@@ -58,9 +60,11 @@ namespace Test_Fidele.Controllers
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
                     }
+                    return Created("http://localhost/good", result);
                 }
+                return Problem(result.Errors.First().Description);
             }
-            return Ok(model);
+            return BadRequest(model);
         }
 
         [HttpPut]
